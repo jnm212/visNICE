@@ -1,0 +1,18 @@
+Package: visNICE
+Type: Package
+Title: Visualise and subsetting of NICE guidance
+Version: 0.1.0
+Authors@R: c(
+    person(
+      "J", "Matthews",
+      email = "jane@example.com",
+      role = c("aut", "cre")
+    )
+  )
+Description: More about what it does (maybe more than one line).
+    Continuation lines should be indented.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+URL: https://github.com/jnm212/visNICE
+BugReports: https://github.com/jnm212/visNICE/issues
