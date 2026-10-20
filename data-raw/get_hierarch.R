@@ -38,6 +38,9 @@ for (ii in 1:nrow(df)) {
     l3 <- h3 |> html_elements(".gtm-topic-list-product") |> html_text2()
     df_i[[ii]] <- cbind(df[ii,],data.frame(Var3=l3))
 }
-df2 <- do.call(rbind, df_i)
+nicedf <- do.call(rbind, df_i)
 
-save(df2, file="./data-raw/nice_hierarchy.rdata")
+nicedf <- nicedf |>
+  rename(L1=Var1, L2=Var2, L3=Var3)
+
+save(nicedf, file="./data-raw/nice_hierarchy.rdata")
