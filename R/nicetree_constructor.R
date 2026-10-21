@@ -40,25 +40,39 @@ nicetree <-   function() {
     rename(text=L2)
 
   dataf_L3 <-  left_join(tmp, select(dataf_L2, text, node), by="text") |>
-  select(-text) |>
-  rename(pnode=node, text=L3) |>
-  mutate(lev=3) |>
-  mutate(node=as.numeric(factor(text)) + max(dataf_L2$node))
+    select(-text) |>
+    rename(pnode=node, text=L3) |>
+    mutate(lev=3) |>
+    mutate(node=as.numeric(factor(text)) + max(dataf_L2$node))
 
   ####
 
   dataf <- bind_rows(dataf_L1, dataf_L2, dataf_L3)
+
+  dataf <- rbind(data.frame(text="root", node=0, pnode=NA, lev=0),      dataf )
+  # add root node
 
   xtract <- function(x,prefix) {#browser();
     substr(x, start=regexpr(paste0("\\(",prefix),x)+1, stop=regexpr("\\)", x)-1)
   }
 
   dataf <- dataf |>
-    #mutate(type=substr(text, start=regexpr("\\([[:upper:]]",text)+1, stop=regexpr("\\([[:upper:]]",text)+2)) |>
     mutate(lab=substr(text, start=regexpr("\\([[:upper:]]",text)+1, stop=regexpr("[[:digit:]]\\)",text)))
 
-  dataf <- rbind(data.frame(text="root", node=0, pnode=NA, lev=0, lab=""),      dataf )
-  # add root node
+
+  dataf$lab <- with(dataf,
+                    case_when(
+                      lev==0 ~ "root",
+                      lev==1 ~ toupper(substr(text,1,3)),
+                      lev==2 ~ toupper(abbreviate(text,minlength=6)),
+                      lev==3 ~ lab
+                    )
+  )
+
+
+
+
+
 
   ####
 
