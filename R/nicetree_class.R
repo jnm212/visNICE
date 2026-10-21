@@ -1,4 +1,8 @@
 
+setGeneric("cutting",  function(h,  ...){print(NULL)})
+
+##################################
+
 #' @export
 #' @title class to represent a tree for nice hierarchy
 #' @slot node node id
@@ -32,9 +36,9 @@ setOldClass("plot")
 
 #' @export
 #' @title plot the tree as a network graph
-#' @param x an object of class atctree
+#' @param x an object of class nicetree
 #' @param circle whether or not to arrange graph over a circle
-#' @param ATC_text whether or not to label with ATC textual info
+#' @param add_text whether or not to label with textual info
 #' @param leaf_label whether or not leaf nodes will be labelled
 #' @param stem_label whether or not stem nodes will be labelled
 #' @param include_names whether or not to include common names in text
@@ -50,15 +54,15 @@ setOldClass("plot")
 setMethod("plot",
           signature=c("nicetree"),
 
-          function(x, circle=NULL, ATC_text=NULL,
-                   leaf_label=NULL, stem_label=NULL,
-                   include_names=F,
+          function(x, circle=FALSE, add_text=FALSE,
+                   leaf_label=FALSE, stem_label=TRUE,
+                   include_names=FALSE,
                    text_size=10, text_angle=45,
                    width=500, height=500, hover_msg=TRUE) {
 
             if (hover_msg) message("Remember you can hover over nodes to see text")
 
-            if (ATC_text==FALSE) {
+            if (add_text==FALSE) {
               labvec <- x@lab
             } else {
               labvec <- x@text
@@ -81,15 +85,15 @@ setMethod("plot",
             #create adjacency matrix
 
             G <- igraph::graph.adjacency(A)
-            #browser()
+
             if (circle) {
               #            L <- igraph::layout_as_tree(G,circular=TRUE)
-              L <- graphlayouts::layout_with_centrality(G, cent=c(8.2,8,6,5,3,1)[x@lev+1])
+              L <- graphlayouts::layout_with_centrality(G, cent=4-x@lev)  #, cent=c(8.2,8,6,5,3,1)[x@lev+1])
               Xn <- L[,1]
               Yn <- L[,2]
 
             } else {
-              L <- igraph::layout_with_sugiyama(G, layers=c(1,2,5,7,8,9)[x@lev+1])
+              L <- igraph::layout_with_sugiyama(G, layers=x@lev) #, layers=c(1,2,5,7,8,9)[x@lev+1])
               Xn <- L$layout[,1]
               Yn <- L$layout[,2]
             }
@@ -173,3 +177,59 @@ setMethod("plot",
           }
 )
 
+
+################################################
+
+
+
+setMethod("cutting",
+          signature("nicetree"),
+
+          function (h, nodelabel=NULL) {
+
+            if (is.null(nodelabel)) stop("No cutting node supplied")
+            if (length(nodelabel)>1) stop("When cutting supply just one node")
+            #            if (intree(h,nodelabel)==FALSE) stop("This cutting node is not in the tree")
+
+            dataf <- as(h, "data.frame")
+
+            ref_node <- filter(dataf, lab==nodelabel)$node
+            child_nodes <- filter(dataf, pnode==ref_node)$node
+            dataf <-  filter(dataf, pnode %in% child_nodes | pnode==ref_node | node==ref_node)
+            # ... because some of these nodes will have parents (child_nodes) whose own parent is *not* the ref_node
+
+            dataf$pnode[dataf$lab==nodelabel] <- 0 #dataf$node[dataf$lab=="0"]
+
+            h2 <- new("nicetree",
+                      pnode = dataf$pnode,
+                      node = dataf$node,
+                      lab = dataf$lab,
+                      text = dataf$text,
+                      lev = dataf$lev,
+                      Nnode = length(dataf$node)-1
+            )
+
+            return(h2)
+            }
+)
+
+#####################################
+
+setAs("nicetree", "data.frame",
+      function(from) {
+
+        df <- data.frame(lab=from@lab,
+                         text=from@text,
+                         node=from@node,
+                         lev=from@lev,
+                         pnode=from@pnode)
+
+
+        #        df <- df |>
+        #          dplyr::relocate(pnode, .after=pATC) |>
+        #          dplyr::relocate(plen, .after=plev)
+
+        df <- unique(df)
+
+        return(df)
+      })
