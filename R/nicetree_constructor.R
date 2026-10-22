@@ -63,13 +63,17 @@ nicetree <-   function() {
   dataf$lab <- with(dataf,
                     case_when(
                       lev==0 ~ "root",
-                      lev==1 ~ toupper(substr(text,1,3)),
-                      lev==2 ~ toupper(abbreviate(text,minlength=6)),
+                      lev==1 ~ toupper(substr(text,1,5)),
+                      lev==2 ~ (abbreviate(text,minlength=4)),
                       lev==3 ~ lab
                     )
   )
 
-
+  dataf$doctype <- with(dataf,
+                    case_when(
+                      lev==3 ~ substr(lab,1,2)
+                    )
+  )
 
 
 
@@ -82,6 +86,7 @@ nicetree <-   function() {
                           lab = dataf$lab,
                           text = dataf$text,
                           lev = dataf$lev,
+                          doctype = dataf$doctype,
                           Nnode = length(dataf$node)-1    # don't count the root node
   )
   #.Object@Nlev <- nlevs(.Object)
