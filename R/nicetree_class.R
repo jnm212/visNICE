@@ -23,7 +23,8 @@ setClass("nicetree",
                          plab="character",
                          lev="numeric",
                          Nnode="numeric",
-                         Nlev="numeric"
+                         Nlev="numeric",
+                         doctype="character"
          )
 )
 
@@ -126,6 +127,7 @@ setMethod("plot",
                                        height = height,
                                        type="scatter",
                                        mode = "markers+text",
+                                       fillcolor=x@doctype,
                                        hovertext = if (include_names==FALSE) {
                                          paste(x@lab, x@text, sep=":")
                                        } else {
@@ -189,7 +191,7 @@ setMethod("cutting",
 
             if (is.null(nodelabel)) stop("No cutting node supplied")
             if (length(nodelabel)>1) stop("When cutting supply just one node")
-            #            if (intree(h,nodelabel)==FALSE) stop("This cutting node is not in the tree")
+            if (!nodelabel %in% h@lab) stop("This cutting node is not in the tree")
 
             dataf <- as(h, "data.frame")
 
@@ -206,6 +208,7 @@ setMethod("cutting",
                       lab = dataf$lab,
                       text = dataf$text,
                       lev = dataf$lev,
+                      doctype = dataf$doctype,
                       Nnode = length(dataf$node)-1
             )
 
@@ -222,7 +225,8 @@ setAs("nicetree", "data.frame",
                          text=from@text,
                          node=from@node,
                          lev=from@lev,
-                         pnode=from@pnode)
+                         pnode=from@pnode,
+                         doctype=from@doctype)
 
 
         #        df <- df |>
