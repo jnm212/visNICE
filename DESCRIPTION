@@ -9,10 +9,12 @@ Authors@R: c(
       role = c("aut", "cre")
     )
   )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
+Imports: plotly, dplyr, purrr, tidyr, stringr
+Description: plot NICE reports
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/jnm212/visNICE
 BugReports: https://github.com/jnm212/visNICE/issues
+Depends: 
+    R (>= 2.10)
