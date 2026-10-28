@@ -4,7 +4,7 @@ Title: Visualise and subsetting of NICE guidance
 Version: 0.1.0
 Authors@R: person("J", "Matthews", email = "jnmatt212@gmail.com",
   role = c("aut", "cre","cph"))
-Imports: plotly, dplyr, purrr, tidyr, stringr
+Imports: tidyr, rlang, plotly, dplyr, purrr, methods,  stringr, graphlayouts, igraph
 Description: plot NICE reports
 License: What license is it under?
 Encoding: UTF-8
