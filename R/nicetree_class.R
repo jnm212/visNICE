@@ -17,6 +17,7 @@ setGeneric("cutting",  function(h, ...) standardGeneric("cutting"), signature="h
 #' @slot lev level of each node (root node is 0)
 #' @slot Nnode number of nodes in the tree excluding root node
 #' @slot Nlev number of levels in the tree excluding root node
+#' @slot doctype NICE document type
 setClass("nicetree",
          representation( node="numeric",
                          pnode="numeric",
@@ -41,7 +42,9 @@ setClass("nicetree",
 #' @returns returns a (smaller) object of class nicetree
 #' @examples
 #' h <- nicetree()
-#' h2 <- cutting(h, "CANCER")
+#' (h)
+#' subh <- cutting(h, "CANCER")
+#' (subh)
 setMethod("cutting",
           signature=c("nicetree"),
 
@@ -99,7 +102,7 @@ setMethod("cutting",
 #' @aliases plot
 #' @examples
 #' h <- nicetree()
-#' cutting(h, "CANCER") |> plot()
+#' cutting(h, "SKINCO") |> plot()
 
 setMethod("plot",
           signature=c("nicetree"),
@@ -253,3 +256,26 @@ setAs("nicetree", "data.frame",
 
         return(df)
       })
+
+######################
+
+#' @export
+#' @title summarise nicetree object
+#' @description shows number of nodes and levels and a cross-table, excluding the root node.
+#' @param object of class nicetree
+#' @returns prints summary to console
+#' @examples
+#' h <- nicetree()
+#' (h)
+#'
+setMethod("show", "nicetree",
+          function(object) {
+
+            cat("\n total number of nodes: ", object@Nnode)
+            cat("\n total number of levels (excluding 0): ", object@Nlev)
+            cat("\n number of nodes by level :")
+            print(table(object@lev))
+          }
+
+)
+
