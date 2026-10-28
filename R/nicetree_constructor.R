@@ -52,33 +52,58 @@ nicetree <-   function() {
   dataf <- rbind(data.frame(text="root", node=0, pnode=NA, lev=0),      dataf )
   # add root node
 
-  xtract <- function(x,prefix) {#browser();
-    substr(x, start=regexpr(paste0("\\(",prefix),x)+1, stop=regexpr("\\)", x)-1)
+  ##############
+  ####  create lab and doctype:
+
+  #round brackets:
+  xtractr <- function(x) {
+                          substr(x,
+                               start=last(gregexpr("\\([[:upper:]]",x)[[1]])+1,
+                               stop=last(gregexpr("[[:digit:]]\\)",x)[[1]])
+                          )
+  }
+
+  #square brackets:
+  xtracts <- function(x) {
+    substr(x,
+           start=last(gregexpr("\\[[[:upper:]]",x)[[1]])+1,
+           stop=last(gregexpr("[[:digit:]]\\]",x)[[1]])
+    )
   }
 
   dataf <- dataf |>
-    mutate(lab=substr(text, start=regexpr("\\([[:upper:]]",text)+1, stop=regexpr("[[:digit:]]\\)",text)))
+    mutate(lab = map_chr(text, .f=xtractr)) |>
+    mutate(lab2 = map_chr(text, .f=xtracts)) |>
+    mutate(lab = if_else(nchar(lab)==0, lab2, lab)) |>
+    select(-lab2)
 
+  # remove the digits from lab to get doctype:
+  dataf <- dataf |>
+    mutate(doctype =
+                case_when(
+                      lev==3 ~  gsub("[[:digit:]]","",lab)
+                    )
+    )
 
+  ## check:
+  tmp <- dataf |>
+    filter(lev==3 & doctype %in% c("ID","AMR","CG","CSG","HST","HTG","NG","PH","TA" )==FALSE)
+  if (nrow(tmp)>0) {
+    message("Some labels were incorrectly parsed")
+    View(tmp)
+    stop()
+  }
+
+  # abbreviate:
   dataf$lab <- with(dataf,
                     case_when(
                       lev==0 ~ "root",
-                      lev==1 ~ str_trim(toupper(substr(text,1,5))),
+                      lev==1 ~ str_trim(toupper(substr(text,1,7))),
                       lev==2 ~ (abbreviate(text,minlength=4)),
                       lev==3 ~ lab
                     )
   )
-
-  dataf$doctype <- with(dataf,
-                    case_when(
-                      lev==3 ~ substr(lab,1,2)
-                    )
-  )
-
-
-
-
-  ####
+  ########
 
   .Object <- methods::new("nicetree",
                           pnode = dataf$pnode,
