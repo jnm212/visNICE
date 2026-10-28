@@ -92,7 +92,7 @@ nicetree <-   function() {
   dataf$lab <- with(dataf,
                     case_when(
                       lev==0 ~ "root",
-                      lev==1 ~ stringr::str_trim(toupper(substr(text,1,7))),
+                      lev==1 ~ toupper(substr(stringr::str_remove(text," "),1,6)),
                       lev==2 ~ (abbreviate(text,minlength=4)),
                       lev==3 ~ lab
                     )
