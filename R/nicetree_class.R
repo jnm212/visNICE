@@ -1,5 +1,8 @@
+setOldClass("plot")
 
-setGeneric("cutting",  function(h,  ...){print(NULL)})
+#setGeneric("cutting",  function(h,  ...){print(NULL)})
+setGeneric("cutting",  function(h, ...) standardGeneric("cutting"), signature="h")
+
 
 ##################################
 
@@ -28,8 +31,52 @@ setClass("nicetree",
          )
 )
 
+####################################
 
-setOldClass("plot")
+#' @export
+#' @title cutting from a nicetree
+#' @param h an object of class nicetree
+#' @param nodelabel identify node of interest
+#' @aliases cutting
+#' @returns returns a (smaller) object of class nicetree
+#' @examples
+#' h <- nicetree()
+#' h2 <- cutting(h, "CANCER")
+setMethod("cutting",
+          signature=c("nicetree"),
+
+          function (h, nodelabel=NULL) {
+
+            if (is.null(nodelabel)) stop("No cutting node supplied")
+            if (length(nodelabel)>1) stop("When cutting supply just one node")
+            if (!nodelabel %in% h@lab) stop("This cutting node is not in the tree")
+
+            dataf <- as(h, "data.frame")
+
+            ref_node <- filter(dataf, lab==nodelabel)$node
+            child_nodes <- filter(dataf, pnode==ref_node)$node
+            dataf <-  filter(dataf, pnode %in% child_nodes | pnode==ref_node | node==ref_node)
+            # ... because some of these nodes will have parents (child_nodes) whose own parent is *not* the ref_node
+
+            dataf$pnode[dataf$lab==nodelabel] <- 0 #dataf$node[dataf$lab=="0"]
+
+            h2 <- new("nicetree",
+                      pnode = dataf$pnode,
+                      node = dataf$node,
+                      lab = dataf$lab,
+                      text = dataf$text,
+                      lev = dataf$lev,
+                      doctype = dataf$doctype,
+                      Nnode = length(dataf$node)-1
+            )
+
+            return(h2)
+          }
+)
+
+####################################
+
+
 
 #############################################################
 ## use plotly
@@ -48,14 +95,16 @@ setOldClass("plot")
 #' @param width graph width
 #' @param height graph height
 #' @param hover_msg whether to remind the user that they can hover over nodes
-#' @details
+#' @details plots an object of class nicetree as a network
 #' @aliases plot
 #' @examples
-#'
+#' h <- nicetree()
+#' cutting(h, "CANCER") |> plot()
+
 setMethod("plot",
           signature=c("nicetree"),
 
-          function(x, circle=FALSE, add_text=FALSE,
+          function(x, circle=TRUE, add_text=FALSE,
                    leaf_label=FALSE, stem_label=TRUE,
                    include_names=FALSE,
                    text_size=10, text_angle=45,
@@ -183,41 +232,8 @@ setMethod("plot",
 ################################################
 
 
-
-setMethod("cutting",
-          signature("nicetree"),
-
-          function (h, nodelabel=NULL) {
-
-            if (is.null(nodelabel)) stop("No cutting node supplied")
-            if (length(nodelabel)>1) stop("When cutting supply just one node")
-            if (!nodelabel %in% h@lab) stop("This cutting node is not in the tree")
-
-            dataf <- as(h, "data.frame")
-
-            ref_node <- filter(dataf, lab==nodelabel)$node
-            child_nodes <- filter(dataf, pnode==ref_node)$node
-            dataf <-  filter(dataf, pnode %in% child_nodes | pnode==ref_node | node==ref_node)
-            # ... because some of these nodes will have parents (child_nodes) whose own parent is *not* the ref_node
-
-            dataf$pnode[dataf$lab==nodelabel] <- 0 #dataf$node[dataf$lab=="0"]
-
-            h2 <- new("nicetree",
-                      pnode = dataf$pnode,
-                      node = dataf$node,
-                      lab = dataf$lab,
-                      text = dataf$text,
-                      lev = dataf$lev,
-                      doctype = dataf$doctype,
-                      Nnode = length(dataf$node)-1
-            )
-
-            return(h2)
-            }
-)
-
-#####################################
-
+#' @export
+#'
 setAs("nicetree", "data.frame",
       function(from) {
 
