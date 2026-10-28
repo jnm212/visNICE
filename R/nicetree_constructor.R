@@ -1,20 +1,14 @@
 
 #' @export
 #' @title constructor for nicetree objects
-#' @param schema a conceptual subset of the ATC hierarchy, or all of it ('full'), or something bespoke ('none')
-#' @param whichlevs subset of levels to use from integers 1:5
-#' @details
-#' either schema or whichlevs should be specified; (e.g. `schema=full` corresponds to `whichlevs=1:5`)
+#' @details make a nicetree
 #' @returns an object of class nicetree
 #' @examples
 #' h <- nicetree()
-#' # tree will contain levels 1 and 5
 
 nicetree <-   function() {
 
-  dataf <- nicedf
-
-  dataf <- distinct(nicedf[,1:2])
+  dataf <- dplyr::distinct(nicedf[,1:2])
 
   #### set up first and second level nodes:
   dataf$node_L1 <- as.numeric(dataf$L1)
@@ -26,7 +20,7 @@ nicetree <-   function() {
   dataf_L1 <- select(dataf, L1, node_L1) |>
     rename(text=L1, node=node_L1) |>
     mutate(pnode=0, lev=1) |> #root note is parent of level 1
-    distinct()
+    dplyr::distinct()
 
   dataf_L2 <- select(dataf, L2, node_L2, pnode_L2) |>
     rename(text=L2, node=node_L2, pnode=pnode_L2) |>
@@ -72,8 +66,8 @@ nicetree <-   function() {
   }
 
   dataf <- dataf |>
-    mutate(lab = map_chr(text, .f=xtractr)) |>
-    mutate(lab2 = map_chr(text, .f=xtracts)) |>
+    mutate(lab = purrr::map_chr(text, .f=xtractr)) |>
+    mutate(lab2 = purrr::map_chr(text, .f=xtracts)) |>
     mutate(lab = if_else(nchar(lab)==0, lab2, lab)) |>
     select(-lab2)
 
@@ -90,7 +84,7 @@ nicetree <-   function() {
     filter(lev==3 & doctype %in% c("ID","AMR","CG","CSG","HST","HTG","NG","PH","TA" )==FALSE)
   if (nrow(tmp)>0) {
     message("Some labels were incorrectly parsed")
-    View(tmp)
+    utils::View(tmp)
     stop()
   }
 
@@ -98,7 +92,7 @@ nicetree <-   function() {
   dataf$lab <- with(dataf,
                     case_when(
                       lev==0 ~ "root",
-                      lev==1 ~ str_trim(toupper(substr(text,1,7))),
+                      lev==1 ~ stringr::str_trim(toupper(substr(text,1,7))),
                       lev==2 ~ (abbreviate(text,minlength=4)),
                       lev==3 ~ lab
                     )

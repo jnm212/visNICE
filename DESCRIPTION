@@ -13,3 +13,4 @@ URL: https://github.com/jnm212/visNICE
 BugReports: https://github.com/jnm212/visNICE/issues
 Depends: 
     R (>= 4.1.0)
+RoxygenNote: 7.3.2
