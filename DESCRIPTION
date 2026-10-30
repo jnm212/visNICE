@@ -1,11 +1,11 @@
 Package: visNICE
 Type: Package
-Title: Visualise and subsetting of NICE guidance
+Title: Visualise NICE guidance documents in a network
 Version: 0.1.0
 Authors@R: person("J", "Matthews", email = "jnmatt212@gmail.com",
   role = c("aut", "cre","cph"))
 Imports: tidyr, rlang, plotly, dplyr, purrr, methods,  stringr, graphlayouts, igraph
-Description: Plots a network of NICE documents, organised by the NICE-defined hierarchy. 
+Description: Plots networks and subnetworks, showing NICE documents organised in a hierarchy. 
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
