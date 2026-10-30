@@ -35,11 +35,14 @@ setClass("nicetree",
 ####################################
 
 #' @export
-#' @title cutting from a nicetree
+#' @title take a cutting from a tree (object of class nicetree)
+#' @description A subtree is formed with the specified node at the root.
+#' This is a 'cutting': all nodes that are not descendents of the specified node are eliminated.
+#' The function returns a (smaller) tree (object of class nicetree), with the specified node as the root.
 #' @param h an object of class nicetree
-#' @param nodelabel identify node of interest
+#' @param nodelabel node of interest
 #' @aliases cutting
-#' @returns returns a (smaller) object of class nicetree
+#' @returns object of class nicetree
 #' @examples
 #' h <- nicetree()
 #' (h)
@@ -87,7 +90,7 @@ setMethod("cutting",
 
 #' @export
 #' @title plot the tree as a network graph
-#' @param x an object of class nicetree
+#' @param x a tree (object of class nicetree)
 #' @param circle whether or not to arrange graph over a circle
 #' @param add_text whether or not to label with textual info
 #' @param leaf_label whether or not leaf nodes will be labelled
@@ -98,8 +101,10 @@ setMethod("cutting",
 #' @param width graph width
 #' @param height graph height
 #' @param hover_msg whether to remind the user that they can hover over nodes
-#' @details plots an object of class nicetree as a network
+#' @details plots an object of class nicetree as a network, with some display options.
+#' Users can hover over nodes to display textual information that would otherwise clutter up the graph.
 #' @aliases plot
+#' @returns object of class plotly
 #' @examples
 #' h <- nicetree()
 #' cutting(h, "SKINCO") |> plot()
@@ -234,9 +239,6 @@ setMethod("plot",
 
 ################################################
 
-
-#' @export
-#'
 setAs("nicetree", "data.frame",
       function(from) {
 
@@ -261,7 +263,8 @@ setAs("nicetree", "data.frame",
 
 #' @export
 #' @title summarise nicetree object
-#' @description shows number of nodes and levels and a cross-table, excluding the root node.
+#' @description Prints to console the number of nodes and levels and a cross-table, excluding the root node.
+#' Also prints the root node and names of the first layer in the tree (children of the root node).
 #' @param object of class nicetree
 #' @returns prints summary to console
 #' @examples
@@ -275,6 +278,10 @@ setMethod("show", "nicetree",
             cat("\n total number of levels (excluding 0): ", object@Nlev)
             cat("\n number of nodes by level :")
             print(table(object@lev))
+
+            cat("\n Root node : ", object@lab[1], "(", object@text[1], ")")
+            firstlev <- min(object@lev)+1
+            cat("\n First layer nodes :", object@lab[object@lev==firstlev])
           }
 
 )
