@@ -119,6 +119,11 @@ setMethod("plot",
                    text_size=10, text_angle=45,
                    width=500, height=500, hover_msg=TRUE) {
 
+            if (identical(unique(x@lev),c(0,1,2,3))) {
+              message("Plotting the whole tree is too time-consuming; restricting to upper levels")
+              x <- cutting(x, "root")
+              } # dont want to plot everything
+
             if (hover_msg) message("Remember you can hover over nodes to see text")
 
             if (add_text==FALSE) {
