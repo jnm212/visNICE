@@ -1,0 +1,76 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# visNICE
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of visNICE is to display the a list publications produced by NICE (UK National Institute for Health and Care Excellence) in the form of network graphs. The list of publications can be found (and browsed with list boxes) at:
+
+https://www.nice.org.uk/guidance/conditions-and-diseases
+
+visNICE produces those results in a graphical form as an alternative means of browsing. The current version of visNICE organises the networks in the hierarchy produced by NICE. 
+
+Each NICE report has a prefix which indicates its type, as follows:
+
+* NG - Nice Guidance
+* TA - Technology Assessment
+* HST - Highly Specialised Technology
+* CSG - Cancer Service Guideline
+* HTG - HealthTech Guidance
+* CG - Clinical Guideline
+
+## Installation
+
+You can install the development version of visNICE from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("pak")
+pak::pak("jnm212/visNICE")
+```
+## Examples
+
+First we make a tree that holds all the information. Typing the name of the tree gives a summary of the hierarchy, including a list of nodes in the first layer:
+
+```{r example}
+library(visNICE)
+
+h <- nicetree()
+(h) # summarise
+
+```
+
+We could plot the whole tree, but because that operation is too time-consuming, visNICE restricts the full-tree plot to the top layers.
+
+```{r, label= firstplot}
+plot(h) 
+```
+
+Now we can take a 'cutting' from the tree, which means there is less information to display, and the whole cutting or subtree will be shown. Here we choose urological conditions (UROLOG) as the root node. First we make a new smaller tree with the cutting command, summarise it, and then plot it. When used interactively, Hovering over the nodes in the tree would show the listed reports.
+
+```{r example2}
+h_uro <- cutting(h, "UROLOG")
+h_uro
+plot(h_uro)
+```
+
+You might want to look at a 'more specific' node. Here we use an alternative command with a pipe (|>), to avoid creating an extra object (the smaller tree).
+
+```{r example3}
+
+cutting(h, "Prsc") |> plot()
+
+```
