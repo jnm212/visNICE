@@ -9,7 +9,7 @@ Description: Plots networks and subnetworks, showing NICE documents organised in
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/jnm212/visNICE
+URL: https://github.com/jnm212/visNICE, https://jnm212.github.io/visNICE/
 BugReports: https://github.com/jnm212/visNICE/issues
 Depends: 
     R (>= 4.1.0)

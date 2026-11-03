@@ -12,6 +12,7 @@ Plots networks and subnetworks, showing NICE documents organised in a hierarchy.
 Useful links:
 \itemize{
   \item \url{https://github.com/jnm212/visNICE}
+  \item \url{https://jnm212.github.io/visNICE/}
   \item Report bugs at \url{https://github.com/jnm212/visNICE/issues}
 }
 
