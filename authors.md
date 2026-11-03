@@ -7,7 +7,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/jnm212/visNICE/blob/master/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/jnm212/visNICE/blob/v0.1.0/DESCRIPTION)
 
 Matthews J (2026). *visNICE: Visualise NICE guidance documents in a
 network*. R package version 0.1.0, <https://github.com/jnm212/visNICE>.
