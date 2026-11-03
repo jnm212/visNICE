@@ -6,7 +6,7 @@
 \alias{visNICE-package}
 \title{visNICE: Visualise NICE guidance documents in a network}
 \description{
-Plots networks and subnetworks, showing NICE documents organised in a hierarchy.
+Plots networks and subnetworks with NICE documents organised in a hierarchy.
 }
 \seealso{
 Useful links:
