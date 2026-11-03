@@ -93,7 +93,9 @@ nicetree <-   function() {
                     case_when(
                       lev==0 ~ "root",
                       lev==1 ~ toupper(substr(stringr::str_remove(text," "),1,6)),
-                      lev==2 ~ (abbreviate(text,minlength=4)),
+                      lev==2 ~ (abbreviate(
+                                iconv(text, to="ASCII"),
+                                minlength=4)),
                       lev==3 ~ lab
                     )
   )
