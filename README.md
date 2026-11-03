@@ -5,6 +5,7 @@
 
 <!-- badges: start -->
 
+[![R-CMD-check](https://github.com/jnm212/visNICE/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jnm212/visNICE/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of visNICE is to display the a list publications produced by
