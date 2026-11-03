@@ -59,7 +59,8 @@ setMethod("cutting",
 
             dataf <- as(h, "data.frame")
 
-            ref_node <- filter(dataf, lab==nodelabel)$node
+            ref_node <- unique(filter(dataf, lab==nodelabel)$node)
+
             child_nodes <- filter(dataf, pnode==ref_node)$node
             dataf <-  filter(dataf, pnode %in% child_nodes | pnode==ref_node | node==ref_node)
             # ... because some of these nodes will have parents (child_nodes) whose own parent is *not* the ref_node
