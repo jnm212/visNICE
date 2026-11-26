@@ -1,3 +1,3 @@
-# visNICE 0.1.0
+# visNICE 1.0.0
 
 * Initial CRAN submission.
