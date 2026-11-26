@@ -1,4 +1,4 @@
-# visNICE: Visualise NICE guidance documents in a network
+# visNICE: Visualise NICE Guidance Documents in a Network
 
 Plots networks and subnetworks with NICE documents organised in a
 hierarchy.
