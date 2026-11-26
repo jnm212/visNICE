@@ -4,7 +4,7 @@
 \name{visNICE-package}
 \alias{visNICE}
 \alias{visNICE-package}
-\title{visNICE: Visualise NICE guidance documents in a network}
+\title{visNICE: Visualise NICE Guidance Documents in a Network}
 \description{
 Plots networks and subnetworks with NICE documents organised in a hierarchy.
 }
